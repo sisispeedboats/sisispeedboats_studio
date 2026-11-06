@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sisi Speed Boats Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@700;900&family=Almarai:wght@700;800&family=Changa:wght@700;800&family=El+Messiri:wght@700&family=Reem+Kufi:wght@700&family=Lalezar&family=Lemonada:wght@700&family=Rakkas&family=Aref+Ruqaa:wght@700&family=Mada:wght@700;900&family=Amiri:wght@700&family=Baloo+Bhaijaan+2:wght@700;800&family=Markazi+Text:wght@700&family=Montserrat:wght@700;900&family=Poppins:wght@700;900&family=Bebas+Neue&family=Anton&family=Oswald:wght@700&family=Pacifico&family=Lobster&family=Playfair+Display:wght@700;900&family=Righteous&family=Bangers&family=Russo+One&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Cairo,Tahoma,sans-serif;background:#07182e;color:#F6F1E7}
+.app{display:flex;flex-wrap:wrap;gap:18px;max-width:1100px;margin:auto;padding:16px}
+.panel{flex:1 1 340px;max-width:460px}
+.view{flex:1 1 380px;text-align:center;position:sticky;top:10px;align-self:flex-start}
+canvas{max-width:100%;max-height:82vh;width:auto;height:auto;border-radius:10px;background:#fff;cursor:grab;touch-action:none}
+details{background:#0f2a4a;border-radius:12px;margin-bottom:10px;padding:8px 12px}
+summary{font-weight:900;cursor:pointer;padding:4px 0}
+label{display:block;font-size:.82rem;opacity:.85;margin:8px 0 3px}
+input[type=text],input[type=number],select,textarea{width:100%;padding:8px;border-radius:8px;border:0;font:inherit;background:#F6F1E7;color:#0B2545}
+input[type=range]{width:100%}input[type=color]{width:100%;height:36px;border:0;padding:0;background:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:.9rem}
+button{padding:11px;border:0;border-radius:10px;background:#FF7A2F;color:#fff;font:inherit;font-weight:900;cursor:pointer;width:100%;margin-top:8px}
+button.g{background:#18B8B0;color:#07182e}button.d{background:#444}
+h1{font-size:1.3rem;margin:0 0 10px}small{opacity:.65}
+
+body{background:radial-gradient(1200px 600px at 80% -10%,#12437a 0,transparent 60%),radial-gradient(900px 500px at 0 100%,#0b6e8f55 0,transparent 55%),#061427}
+h1{font-family:Montserrat,Cairo,sans-serif;font-weight:900;letter-spacing:2px;font-size:1.25rem;margin:0 0 14px}
+h1 span{background:linear-gradient(90deg,#18B8B0,#FF7A2F);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 small{font-size:.6rem;letter-spacing:3px;opacity:.6;font-weight:700}
+details{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+summary{color:#18B8B0}
+button{background:linear-gradient(135deg,#FF7A2F,#ff9a55);box-shadow:0 6px 18px #ff7a2f44;transition:.15s}
+button:hover{transform:translateY(-1px)}
+button.g{background:linear-gradient(135deg,#18B8B0,#5ee3da)}
+.dev{display:inline-block;padding:10px;border-radius:34px;background:#000;box-shadow:0 20px 60px #0008,0 0 0 2px #2a3d57}
+.dev canvas{display:block;border-radius:24px}
+.tools{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.tools button{margin:0;width:auto;padding:9px 16px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="panel">
+<h1><span>SISI</span> SPEED BOATS <small>STUDIO</small></h1>
+
+<details open><summary>1) المقاس والقالب</summary>
+<label>المقاس</label>
+<select data-k="size">
+<option value="ig">إنستجرام بوست 1080×1350</option>
+<option value="sq">مربع 1080×1080 (إنستجرام / فيسبوك)</option>
+<option value="story">ستوري / ريلز 1080×1920</option>
+<option value="fb">فيسبوك بوست 1200×630</option>
+<option value="cover">غلاف فيسبوك 1640×624</option>
+</select>
+<label>القالب</label>
+<select data-k="tpl">
+<option value="photo">صورة + إطار (بدون كلام)</option>
+<option value="photoText" selected>صورة + عنوان</option>
+<option value="price">قائمة أسعار</option>
+<option value="steps">خطوات الحجز</option>
+<option value="review">رأي عميل</option>
+</select>
+</details>
+
+<details open><summary>2) الصورة</summary>
+<input type="file" id="photo" accept="image/*">
+<small>اسحب الصورة على المعاينة لتحريكها</small>
+<label>تكبير</label><input type="range" data-k="zoom" min="1" max="3" step="0.01" value="1">
+<div class="r2"><div><label>يمين / شمال</label><input type="range" data-k="px" min="-50" max="50" value="0"></div>
+<div><label>فوق / تحت</label><input type="range" data-k="py" min="-50" max="50" value="0"></div></div>
+<div class="r2"><div><label>السطوع</label><input type="range" data-k="bright" min="50" max="150" value="100"></div>
+<div><label>تظليل تحت الكلام</label><input type="range" data-k="overlay" min="0" max="100" value="85"></div></div>
+<div class="chk"><input type="checkbox" data-k="frame" checked> إطار رفيع</div>
+<label>سمك الإطار</label><input type="range" data-k="fw" min="2" max="12" value="4">
+</details>
+
+<details open><summary>🎬 الفيديو</summary>
+<input type="file" id="video" accept="video/*">
+<small>الفيديو بيشتغل مع قالبي «صورة» و«صورة + عنوان». اللوجو والكلام والأيقونات بتتحط فوقه.</small>
+<div class="r2"><button class="g" id="playBtn">▶️ معاينة</button><button class="d" id="rmVid">مسح الفيديو</button></div>
+<div class="r2"><div><label>بداية (ثانية)</label><input type="number" data-k="vstart" min="0" step="0.1" value="0"></div>
+<div><label>نهاية (0 = للآخر)</label><input type="number" data-k="vend" min="0" step="0.1" value="0"></div></div>
+<div class="chk"><input type="checkbox" data-k="vmute"> بدون صوت</div>
+<button id="recBtn">🎬 سجّل الفيديو وحمّله</button>
+<small id="vstat">التسجيل بياخد نفس مدة الفيديو. سيب التاب مفتوح قدامك لحد ما يخلص.</small>
+</details>
+
+<details open><summary>3) النصوص</summary>
+<label>التاج</label><input type="text" data-k="tag" value="رحلة اليوم">
+<label>العنوان</label><textarea data-k="title" rows="2">جزيرة الوايت آيلاند</textarea>
+<label>السطر التحتاني</label><input type="text" data-k="sub" value="احجز دلوقتي على واتساب">
+<label>قائمة الأسعار (الاسم | السعر في كل سطر)</label>
+<textarea data-k="lines" rows="4">رحلة لنش ساعتين | 800 ج
+جزيرة الوايت آيلاند | 1000 ج
+غروب Golden Hour | 700 ج
+رحلة خاصة | 3500 ج</textarea>
+<label>خطوات الحجز (خطوة في كل سطر)</label>
+<textarea data-k="steps" rows="3">ابعت رسالة واتساب
+اختار اليوم والميعاد
+ادفع العربون وتعالى</textarea>
+<label>خط العنوان (26 خط)</label><select data-k="font"></select>
+<label>خط الكلام</label><select data-k="font2"></select>
+<div class="r2" style="grid-template-columns:1fr">
+<div><label>مكان الكلام</label><select data-k="tpos"><option value="b">تحت</option><option value="mid">نص</option><option value="top">فوق</option></select></div></div>
+<label>حجم العنوان</label><input type="range" data-k="tsize" min="50" max="140" value="88">
+<div class="chk"><input type="checkbox" data-k="badgeOn"> ستيكر عرض (دايرة)</div>
+<label>نص الستيكر (سطر صغير | سطر كبير)</label><input type="text" data-k="badge" value="خصم|30%">
+</details>
+
+<details open><summary>✨ تأثيرات وحركة</summary>
+<div class="chk"><input type="checkbox" data-k="waves"> 🌊 موج متحرك</div>
+<label>ارتفاع الموج</label><input type="range" data-k="wh" min="5" max="35" value="14">
+<label>تعتيم الأطراف (سينمائي)</label><input type="range" data-k="vig" min="0" max="100" value="0">
+<div class="chk"><input type="checkbox" data-k="shadow" checked> ظل للكلام</div>
+<div class="r2"><div><label>حركة النص</label><select data-k="anim"><option value="none">بدون</option><option value="fade">ظهور تدريجي</option><option value="slide">صعود</option></select></div>
+<div><label>حركة الصورة</label><select data-k="kb"><option value="none">ثابتة</option><option value="in">تقرّب</option><option value="out">تبعّد</option></select></div></div>
+<label>مدة ريلز الصورة (ثانية)</label><input type="number" data-k="vdur" min="3" max="30" step="1" value="8">
+<div class="chk"><input type="checkbox" data-k="guides"> خطوط الأمان والتقسيم (معاينة بس)</div>
+<small>من غير فيديو: ارفع صورة بس واضغط تسجيل، هتطلعلك ريلز متحركة (تقرّب + نص بيظهر + موج).</small>
+</details>
+
+<details><summary>4) اللوجو</summary>
+<input type="file" id="logoFile" accept="image/*">
+<small>بيتحفظ في المتصفح، مش محتاج ترفعه كل مرة.</small>
+<button class="d" id="rmLogo">مسح اللوجو المحفوظ</button>
+<div class="r2"><div><label>مكانه</label><select data-k="lpos"><option value="tl">فوق شمال</option><option value="tr">فوق يمين</option><option value="bl">تحت شمال</option><option value="br">تحت يمين</option></select></div>
+<div><label>حجمه</label><input type="range" data-k="logoW" min="120" max="420" value="240"></div></div>
+</details>
+
+<details open><summary>5) أيقونات التواصل</summary>
+<div class="chk"><input type="checkbox" data-k="iconsOn" checked> إظهار شريط التواصل</div>
+<div class="chk"><input type="checkbox" data-k="s_ig" checked> Instagram</div>
+<input type="text" data-k="ig" value="@sisi_speed_boat">
+<div class="chk"><input type="checkbox" data-k="s_fb" checked> Facebook</div>
+<input type="text" data-k="fb" value="Sisi Speed Boats">
+<div class="chk"><input type="checkbox" data-k="s_wa" checked> WhatsApp</div>
+<input type="text" data-k="wa" value="+20 10 0000 0000">
+<div class="chk"><input type="checkbox" data-k="s_tt"> TikTok</div>
+<input type="text" data-k="tt" value="@sisi_speed_boat">
+<div class="chk"><input type="checkbox" data-k="s_ph"> تليفون</div>
+<input type="text" data-k="ph" value="">
+</details>
+
+<details><summary>6) الألوان</summary>
+<label>ثيم جاهز</label>
+<select data-k="theme" id="theme"><option value="brand">الهوية (كحلي/تركواز/برتقالي)</option><option value="sunset">غروب</option><option value="night">ليل</option><option value="ocean">محيط</option><option value="coral">مرجان</option><option value="gold">ذهبي</option><option value="custom">مخصص</option></select>
+<div class="r2"><div><label>الأساسي</label><input type="color" data-k="c1" value="#0B2545"></div>
+<div><label>الثانوي</label><input type="color" data-k="c2" value="#18B8B0"></div></div>
+<label>لون التمييز (التاج / الأسعار / الستيكر)</label><input type="color" data-k="c3" value="#FF7A2F">
+</details>
+
+<details open><summary>7) التصدير</summary>
+<label>الصيغة</label><select id="fmt"><option value="png">PNG</option><option value="jpg">JPG (أخف)</option></select>
+<button id="dl">⬇️ نزّل المقاس ده</button>
+<button class="g" id="dlAll">📦 نزّل كل المقاسات (5 ملفات)</button>
+<button class="d" id="reset">إعادة ضبط كل حاجة</button>
+</details>
+</div>
+<div class="view"><div class="dev"><canvas id="cv" width="1080" height="1350"></canvas></div>
+<div class="tools"><button id="rnd">🎲 فاجئني</button><button class="g" id="extract">🎨 ألوان من الصورة</button></div></div>
+</div>
+<script>
+const SIZES={ig:[1080,1350],sq:[1080,1080],story:[1080,1920],fb:[1200,630],cover:[1640,624]};
+const TH={brand:['#0B2545','#18B8B0','#FF7A2F'],sunset:['#2A1245','#FF7A2F','#FFC83D'],night:['#050B18','#1E88E5','#00E5FF'],ocean:['#03396C','#00B4D8','#FFD166'],coral:['#1B1B3A','#FF6B6B','#FFE66D'],gold:['#0B132B','#C9A227','#F5E6B3']};
+const $=id=>document.getElementById(id),cv=$('cv'),S={};
+const els=[...document.querySelectorAll('[data-k]')];
+let c,W,H,u,m,photo=null,logo=null,vid=null,rec=false,stopFlag=false,aCtx=null,aNode=null,aDest=null,TT,KP=0,AP=1;
+const isAr=t=>/[\u0600-\u06FF]/.test(t||'');
+const FONTS=[['Cairo'],['Tajawal'],['Almarai'],['Changa'],['El Messiri'],['Reem Kufi'],['Lalezar',1],['Lemonada'],['Rakkas',1],['Aref Ruqaa'],['Mada'],['Amiri'],['Baloo Bhaijaan 2'],['Markazi Text'],['Montserrat'],['Poppins'],['Bebas Neue',1],['Anton',1],['Oswald'],['Pacifico',1],['Lobster',1],['Playfair Display'],['Righteous',1],['Bangers',1],['Russo One',1],['Cinzel']];
+const SINGLE=new Set(FONTS.filter(f=>f[1]).map(f=>f[0]));
+const fs=(w,s,f=S.font)=>`${SINGLE.has(f)?400:w} ${Math.round(s)}px "${f}",Cairo,Arial`;
+const fs2=(w,s)=>fs(w,s,S.font2);
+function loadFonts(){return document.fonts?Promise.all([S.font,S.font2,'Montserrat'].map(f=>document.fonts.load(`700 40px "${f}"`,'ابتثAa'))):Promise.resolve()}
+['font','font2'].forEach(k=>{const sel=document.querySelector(`[data-k=${k}]`);FONTS.forEach(([n])=>{const o=new Option(n,n);o.style.fontFamily=`"${n}"`;sel.add(o)});sel.value='Cairo';sel.addEventListener('change',()=>{readAll();loadFonts().then(update)})});
+function readAll(){els.forEach(e=>{S[e.dataset.k]=e.type==='checkbox'?e.checked:(e.type==='range'||e.type==='number')?+e.value:e.value})}
+function applySaved(o){els.forEach(e=>{const v=o[e.dataset.k];if(v===undefined)return;if(e.type==='checkbox')e.checked=v;else e.value=v})}
+function loadImg(src,cb){const i=new Image();i.onload=()=>cb(i);i.src=src}
+function wrap(t,maxW){const out=[];String(t).split('\n').forEach(p=>{let cur='';p.split(' ').forEach(w=>{const x=cur?cur+' '+w:w;if(c.measureText(x).width>maxW&&cur){out.push(cur);cur=w}else cur=x});out.push(cur)});return out}
+function dx(t){const a=isAr(t);c.direction=a?'rtl':'ltr';c.textAlign=a?'right':'left';return a?W-m:m}
+
+function render(cnv,w,h){
+ W=w;H=h;if(cnv.width!==w)cnv.width=w;if(cnv.height!==h)cnv.height=h;c=cnv.getContext('2d');c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,w,h);c.globalAlpha=1;u=Math.min(w,h)/1080;m=90*u;AP=TT===undefined?1:Math.min(1,Math.max(0,(TT-.3)/.9));
+ const t=S.tpl;
+ if(t==='price'||t==='steps'){c.fillStyle=S.c1;c.fillRect(0,0,W,H);c.globalAlpha=.18;c.fillStyle=S.c2;c.beginPath();c.arc(W,0,520*u,0,7);c.fill();c.globalAlpha=1}
+ else if(t==='review'){c.fillStyle=S.c2;c.fillRect(0,0,W,H)}
+ else{
+  const src=(vid&&vid.readyState>=2)?vid:photo;
+  if(src){const sw=src.videoWidth||src.width,sh=src.videoHeight||src.height,r=Math.max(W/sw,H/sh)*S.zoom*kbz(),pw=sw*r,ph=sh*r;
+   c.save();c.filter=`brightness(${S.bright}%)`;c.drawImage(src,(W-pw)/2+S.px/100*W,(H-ph)/2+S.py/100*H,pw,ph);c.restore()}
+  else{const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,S.c2);g.addColorStop(.6,'#0B6E8F');g.addColorStop(1,S.c1);c.fillStyle=g;c.fillRect(0,0,W,H)}
+  if(t==='photoText'){const g=c.createLinearGradient(0,H*.4,0,H);g.addColorStop(0,'rgba(7,24,46,0)');g.addColorStop(1,`rgba(7,24,46,${S.overlay/100})`);c.fillStyle=g;c.fillRect(0,0,W,H)}
+ }
+ vignette();waves();
+ if(S.frame){c.strokeStyle=t==='review'?S.c1:'#fff';c.lineWidth=S.fw*u;c.beginPath();c.roundRect(30*u,30*u,W-60*u,H-60*u,18*u);c.stroke()}
+ if(t==='photoText')textBlock('#fff',S.tpos);
+ if(t==='price'){const y=textBlock('#fff','top');rows(y+30*u,false)}
+ if(t==='steps'){const y=textBlock('#fff','top');rows(y+30*u,true)}
+ if(t==='review'){c.fillStyle=S.c1;c.globalAlpha=.25;c.font=fs(900,300*u);c.direction='ltr';c.textAlign='left';c.fillText('\u201C',m,330*u);c.globalAlpha=1;
+  const y=textBlock(S.c1,'mid');c.fillStyle=S.c3;c.font=fs(900,60*u);c.fillText('\u2605\u2605\u2605\u2605\u2605',dx(S.sub||S.title),y+80*u)}
+ badge();logoDraw();bar();
+}
+function kbz(){return S.kb==='in'?1+.18*KP:S.kb==='out'?1.18-.18*KP:1}
+function aS(){c.save();const e=1-Math.pow(1-AP,3);if(S.anim==='fade'||S.anim==='slide')c.globalAlpha=e;if(S.anim==='slide')c.translate(0,(1-e)*80*u);
+ if(S.shadow&&S.tpl==='photoText'){c.shadowColor='rgba(0,0,0,.55)';c.shadowBlur=22*u;c.shadowOffsetY=3*u}}
+function textBlock(fg,pos){aS();const y=textBlock0(fg,pos);c.restore();return y}
+function vignette(){if(!S.vig||['price','steps','review'].includes(S.tpl))return;const g=c.createRadialGradient(W/2,H/2,Math.min(W,H)*.3,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,`rgba(0,0,0,${S.vig/100*.8})`);c.fillStyle=g;c.fillRect(0,0,W,H)}
+function waves(){if(!S.waves)return;const ph=(TT||0)*1.3,top=H-S.wh/100*H;
+ [[S.c2,.55,0,1],['#ffffff',.3,22,1.7],[S.c1,.9,48,.8]].forEach(([col,al,off,sp],i)=>{c.globalAlpha=al;c.fillStyle=col;c.beginPath();c.moveTo(0,H);
+  for(let x=0;x<=W;x+=12)c.lineTo(x,top+off*u+Math.sin(x/(150*u)*sp+ph*sp+i*2)*18*u);
+  c.lineTo(W,H);c.closePath();c.fill()});c.globalAlpha=1}
+function guides(){if(!S.guides)return;c.save();c.strokeStyle='rgba(255,255,255,.55)';c.setLineDash([14,10]);c.lineWidth=2;
+ [1/3,2/3].forEach(f=>{c.beginPath();c.moveTo(W*f,0);c.lineTo(W*f,H);c.moveTo(0,H*f);c.lineTo(W,H*f);c.stroke()});
+ if(S.size==='story'){c.strokeStyle='rgba(255,122,47,.9)';[250/1920*H,H-340/1920*H].forEach(y=>{c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke()})}
+ c.restore()}
+function textBlock0(fg,pos){
+ const mw=W-2*m,ts=S.tsize*u,lh=ts*1.2;
+ c.font=fs(900,ts);const tl=S.title?wrap(S.title,mw):[];
+ c.font=fs2(700,40*u);const sl=S.sub?wrap(S.sub,mw):[];
+ const tagH=S.tag?96*u:0,total=tagH+tl.length*lh+sl.length*56*u;
+ const bot=H-(S.iconsOn?200*u:m),topY=m+(S.lpos[0]==='t'?170*u:0);
+ let y=pos==='top'?topY:pos==='mid'?(H-total)/2:bot-total;
+ if(S.tag){c.font=fs(900,36*u);const pw=c.measureText(S.tag).width+56*u,a=isAr(S.tag),px=a?W-m-pw:m;
+  c.fillStyle=S.c3;c.beginPath();c.roundRect(px,y,pw,62*u,31*u);c.fill();
+  c.fillStyle='#fff';c.direction=a?'rtl':'ltr';c.textAlign='center';c.fillText(S.tag,px+pw/2,y+44*u);y+=tagH}
+ c.fillStyle=fg;c.font=fs(900,ts);
+ tl.forEach((l,i)=>{const x=dx(l);c.fillText(l,x,y+ts*.92+i*lh)});
+ y+=tl.length*lh;c.save();c.font=fs2(700,40*u);c.globalAlpha*=.92;
+ sl.forEach((l,i)=>{const x=dx(l);c.fillText(l,x,y+44*u+i*56*u)});c.restore();
+ return y+sl.length*56*u;
+}
+function rows(y0,steps){
+ const L=(steps?S.steps:S.lines).split('\n').filter(x=>x.trim());
+ const rh=Math.min(120*u,(H-y0-(S.iconsOn?200*u:m))/Math.max(L.length,1));
+ L.forEach((l,i)=>{const p=l.split('|').map(s=>s.trim()),a=p[0],b=p[1]||'',yy=y0+rh*(i+.62),ar=isAr(a),sz=Math.min(46*u,rh*.42);
+  if(steps){const cx=ar?W-m-sz:m+sz;c.fillStyle=S.c3;c.beginPath();c.arc(cx,yy-sz*.35,sz,0,7);c.fill();
+   c.fillStyle='#fff';c.font=fs(900,sz*1.1);c.textAlign='center';c.direction='ltr';c.fillText(String(i+1),cx,yy+sz*.05);
+   c.font=fs2(700,sz*1.05);c.direction=ar?'rtl':'ltr';c.textAlign=ar?'right':'left';c.fillText(a,ar?W-m-sz*2.6:m+sz*2.6,yy)}
+  else{c.font=fs2(700,sz);c.fillStyle='#fff';c.direction=ar?'rtl':'ltr';c.textAlign=ar?'right':'left';c.fillText(a,ar?W-m:m,yy);
+   c.font=fs(900,sz*1.1);c.fillStyle=S.c3;c.textAlign=ar?'left':'right';c.fillText(b,ar?m:W-m,yy)}
+  c.fillStyle='rgba(255,255,255,.22)';c.fillRect(m,y0+rh*(i+1)-rh*.08,W-2*m,2*u)});
+}
+function badge(){
+ if(!S.badgeOn)return;
+ const r=125*u,x=S.lpos[1]==='l'?W-60*u-r:60*u+r,y=60*u+r,p=S.badge.split('|');
+ c.save();c.translate(x,y);c.rotate(-.17);c.fillStyle=S.c3;c.beginPath();c.arc(0,0,r,0,7);c.fill();
+ c.strokeStyle='#fff';c.lineWidth=6*u;c.stroke();c.fillStyle='#fff';c.direction=isAr(S.badge)?'rtl':'ltr';c.textAlign='center';
+ if(p.length>1){c.font=fs(700,38*u);c.fillText(p[0],0,-18*u);c.font=fs(900,84*u);c.fillText(p[1],0,64*u)}
+ else{c.font=fs(900,52*u);c.fillText(p[0],0,18*u)}
+ c.restore();
+}
+function logoDraw(){
+ const w=S.logoW*u,mm=60*u,k=S.logoW/240*u,h=logo?w*logo.height/logo.width:118*k;
+ const x=S.lpos[1]==='l'?mm:W-mm-w,y=S.lpos[0]==='t'?mm:H-mm-h-(S.iconsOn?150*u:0);
+ if(logo){c.drawImage(logo,x,y,w,h);return}
+ c.fillStyle=S.tpl==='review'?S.c1:'#fff';c.direction='ltr';c.textAlign='left';
+ c.font=`900 ${54*k}px Montserrat,Arial`;c.fillText('SISI',x,y+50*k);
+ c.font=`700 ${24*k}px Montserrat,Arial`;c.fillText('S P E E D  B O A T S',x,y+86*k);
+ c.fillRect(x,y+100*k,150*k,5*k);c.fillRect(x+20*k,y+112*k,110*k,3*k);
+}
+function glyph(k,x,y,r){
+ c.save();c.strokeStyle=c.fillStyle=S.c1;c.lineWidth=r*.16;c.lineCap='round';c.direction='ltr';c.textAlign='center';
+ if(k==='ig'){const s=r*.95;c.beginPath();c.roundRect(x-s/2,y-s/2,s,s,s*.28);c.stroke();c.beginPath();c.arc(x,y,s*.23,0,7);c.stroke();c.beginPath();c.arc(x+s*.3,y-s*.3,r*.07,0,7);c.fill()}
+ else if(k==='fb'){c.font=`900 ${r*1.45}px Montserrat,Arial`;c.fillText('f',x+r*.04,y+r*.52)}
+ else if(k==='tt'){c.font=`900 ${r*1.3}px Montserrat,Arial`;c.fillText('\u266A',x,y+r*.45)}
+ else if(k==='wa'){c.beginPath();c.arc(x,y-r*.02,r*.52,0,7);c.stroke();c.beginPath();c.moveTo(x-r*.5,y+r*.3);c.lineTo(x-r*.64,y+r*.66);c.lineTo(x-r*.25,y+r*.5);c.fill();
+  c.lineWidth=r*.22;c.beginPath();c.moveTo(x-r*.18,y-r*.2);c.lineTo(x+r*.2,y+r*.18);c.stroke()}
+ else{c.lineWidth=r*.3;c.beginPath();c.moveTo(x-r*.4,y-r*.4);c.quadraticCurveTo(x-r*.1,y+r*.1,x+r*.4,y+r*.4);c.stroke()}
+ c.restore();
+}
+function bar(){
+ if(!S.iconsOn)return;
+ const it=['ig','fb','wa','tt','ph'].filter(k=>S['s_'+k]);if(!it.length)return;
+ const f=30*u,ic=64*u,gap=44*u,pad=36*u;
+ c.font=`700 ${f}px Montserrat,Cairo,Arial`;
+ const ws=it.map(k=>ic+(S[k]?10*u+c.measureText(S[k]).width:0));
+ const total=ws.reduce((a,b)=>a+b,0)+gap*(it.length-1)+2*pad,sc=Math.min(1,(W-120*u)/total);
+ c.save();c.translate(W/2,H-112*u);c.scale(sc,sc);
+ c.fillStyle='rgba(7,24,46,.66)';c.beginPath();c.roundRect(-total/2,-38*u,total,76*u,38*u);c.fill();
+ let x=-total/2+pad;
+ it.forEach((k,i)=>{c.fillStyle='#fff';c.beginPath();c.arc(x+ic/2,0,ic/2,0,7);c.fill();glyph(k,x+ic/2,0,ic/2);
+  if(S[k]){c.fillStyle='#fff';c.font=`700 ${f}px Montserrat,Cairo,Arial`;c.direction='ltr';c.textAlign='left';c.fillText(S[k],x+ic+10*u,f*.36)}
+  x+=ws[i]+gap});
+ c.restore();
+}
+function draw(){const [w,h]=SIZES[S.size];render(cv,w,h);guides()}
+function update(){readAll();draw();try{localStorage.setItem('sisiV2',JSON.stringify(S))}catch(e){}}
+
+els.forEach(e=>e.addEventListener('input',update));
+$('theme').addEventListener('change',()=>{const t=TH[$('theme').value];if(!t)return;['c1','c2','c3'].forEach((k,i)=>document.querySelector(`[data-k=${k}]`).value=t[i]);update()});
+$('photo').onchange=e=>{const f=e.target.files[0];if(f)loadImg(URL.createObjectURL(f),i=>{photo=i;update()})};
+$('logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{loadImg(r.result,i=>{logo=i;update()});try{localStorage.setItem('sisiLogo',r.result)}catch(x){}};r.readAsDataURL(f)};
+$('rmLogo').onclick=()=>{logo=null;try{localStorage.removeItem('sisiLogo')}catch(e){}update()};
+$('reset').onclick=()=>{try{localStorage.removeItem('sisiV2');localStorage.removeItem('sisiLogo')}catch(e){}location.reload()};
+// drag photo on preview
+let drag=null;
+cv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'});
+cv.addEventListener('pointerup',()=>{drag=null;cv.style.cursor='grab'});
+cv.addEventListener('pointermove',e=>{if(!drag||!(photo||vid))return;const r=cv.getBoundingClientRect();
+ const nx=Math.max(-50,Math.min(50,S.px+(e.clientX-drag[0])/r.width*100)),ny=Math.max(-50,Math.min(50,S.py+(e.clientY-drag[1])/r.height*100));
+ drag=[e.clientX,e.clientY];document.querySelector('[data-k=px]').value=nx;document.querySelector('[data-k=py]').value=ny;update()});
+// export
+function exp(k){return new Promise(res=>{TT=undefined;KP=0;const cc=document.createElement('canvas'),[w,h]=SIZES[k],jpg=$('fmt').value==='jpg';render(cc,w,h);
+ cc.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`sisi-speed-boats-${k}-${w}x${h}.${jpg?'jpg':'png'}`;a.click();res()},jpg?'image/jpeg':'image/png',.95)})}
+$('dl').onclick=async()=>{await loadFonts();await exp(S.size);update()};
+$('dlAll').onclick=async()=>{await loadFonts();for(const k in SIZES){await exp(k);await new Promise(r=>setTimeout(r,400))}update()};
+// video + motion
+let playing=false,pt0=0;
+function pickMime(){return ['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t))}
+function rng(){const s0=S.vstart||0;return [s0,(vid&&S.vend>0&&S.vend<vid.duration)?S.vend:(vid?vid.duration:0)]}
+function clock(){if(vid){const [a,b]=rng();return [vid.currentTime-a,b-a]}return [((performance.now()-pt0)/1000)%S.vdur,S.vdur]}
+function stopPlay(){playing=false;if(vid)vid.pause();TT=undefined;KP=0;$('playBtn').textContent='▶️ معاينة';update()}
+$('video').onchange=e=>{const f=e.target.files[0];if(!f)return;
+ const v=document.createElement('video');v.muted=true;v.loop=true;v.playsInline=true;v.preload='auto';
+ v.addEventListener('loadeddata',()=>{vid=v;aNode=null;aDest=null;
+  document.querySelector('[data-k=vstart]').value=0;document.querySelector('[data-k=vend]').value=0;
+  $('vstat').textContent=`مدة الفيديو ${v.duration.toFixed(1)} ثانية`;update()});
+ v.addEventListener('seeked',()=>{if(!rec&&!playing)update()});
+ v.src=URL.createObjectURL(f)};
+$('playBtn').onclick=()=>{if(!vid&&!photo){alert('ارفع صورة أو فيديو الأول');return}
+ if(playing){stopPlay();return}playing=true;pt0=performance.now();
+ if(vid){vid.muted=true;vid.currentTime=S.vstart||0;vid.play()}$('playBtn').textContent='⏸ إيقاف'};
+$('rmVid').onclick=()=>{stopPlay();vid=null;aNode=null;update()};
+(function loop(){if(playing&&!rec){if(vid&&S.vend>0&&vid.currentTime>=S.vend)vid.currentTime=S.vstart||0;
+ const [T,tot]=clock();TT=T;KP=Math.min(1,Math.max(0,T/tot));draw()}requestAnimationFrame(loop)})();
+$('recBtn').onclick=async()=>{
+ if(rec){stopFlag=true;return}
+ if(!vid&&!photo){alert('ارفع فيديو أو صورة الأول');return}
+ const mt=pickMime();if(!mt){alert('المتصفح ده مش بيدعم تسجيل الفيديو. استخدم Chrome على الكمبيوتر.');return}
+ if(playing)stopPlay();
+ readAll();await loadFonts();rec=true;stopFlag=false;
+ const [w,h]=SIZES[S.size],cc=document.createElement('canvas');TT=0;KP=0;render(cc,w,h);
+ const st=cc.captureStream(30);let s0=0,tot=S.vdur;
+ if(vid){vid.loop=false;const r=rng();s0=r[0];tot=r[1]-r[0];
+  if(!S.vmute){try{if(!aCtx)aCtx=new AudioContext();
+   if(!aNode){aNode=aCtx.createMediaElementSource(vid);aDest=aCtx.createMediaStreamDestination();aNode.connect(aDest)}
+   await aCtx.resume();aDest.stream.getAudioTracks().forEach(t=>st.addTrack(t));vid.muted=false}catch(err){console.warn(err)}}
+  if(Math.abs(vid.currentTime-s0)>.05){await new Promise(r=>{vid.addEventListener('seeked',r,{once:true});vid.currentTime=s0;setTimeout(r,2000)})}}
+ const mr=new MediaRecorder(st,{mimeType:mt,videoBitsPerSecond:8000000}),chunks=[];
+ mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+ const stopped=new Promise(r=>{mr.onstop=r});
+ $('recBtn').textContent='⏹ إيقاف وحفظ';
+ mr.start(250);const t0=performance.now();if(vid)await vid.play();
+ await new Promise(res=>{const tick=()=>{const T=vid?vid.currentTime-s0:(performance.now()-t0)/1000;
+   TT=T;KP=Math.min(1,Math.max(0,T/tot));render(cc,w,h);
+   $('vstat').textContent=`بيسجّل... ${Math.min(100,Math.round(T/Math.max(.1,tot)*100))}%`;
+   if(stopFlag||(vid&&vid.ended)||T>=tot-.03){res();return}requestAnimationFrame(tick)};tick()});
+ if(vid)vid.pause();mr.stop();await stopped;
+ const blob=new Blob(chunks,{type:mt.split(';')[0]}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download=`sisi-speed-boats-video-${w}x${h}.${mt.includes('mp4')?'mp4':'webm'}`;a.click();
+ if(vid){vid.muted=true;vid.loop=true}rec=false;stopFlag=false;TT=undefined;KP=0;
+ $('recBtn').textContent='🎬 سجّل الفيديو وحمّله';
+ $('vstat').textContent=mt.includes('mp4')?'تم! الملف MP4 جاهز للرفع.':'تم! الملف WebM، لو إنستجرام رفضه حوّله MP4 (مثلاً cloudconvert.com).';
+ update()};
+// magic: colors from photo + surprise me
+const hex=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+function setK(k,v){const e=document.querySelector(`[data-k=${k}]`);if(e.type==='checkbox')e.checked=v;else e.value=v}
+$('extract').onclick=()=>{const src=(vid&&vid.readyState>=2)?vid:photo;if(!src){alert('ارفع صورة أو فيديو الأول');return}
+ const t=document.createElement('canvas');t.width=t.height=40;const x=t.getContext('2d');x.drawImage(src,0,0,40,40);
+ const d=x.getImageData(0,0,40,40).data,b={};
+ for(let i=0;i<d.length;i+=4){const k=(d[i]>>5)+'-'+(d[i+1]>>5)+'-'+(d[i+2]>>5),a=b[k]||(b[k]=[0,0,0,0]);a[0]+=d[i];a[1]+=d[i+1];a[2]+=d[i+2];a[3]++}
+ const L=Object.values(b).map(a=>{const r=a[0]/a[3],g=a[1]/a[3],bl=a[2]/a[3],mx=Math.max(r,g,bl),mn=Math.min(r,g,bl);return{r,g,b:bl,n:a[3],sat:mx?(mx-mn)/mx:0,lum:(r+g+bl)/3}});
+ const dark=[...L].sort((p,q)=>p.lum-q.lum).slice(0,Math.max(1,L.length>>2)).sort((p,q)=>q.n-p.n)[0];
+ const vv=L.filter(o=>o.sat>.3&&o.lum>70).sort((p,q)=>q.n*q.sat-p.n*p.sat),c2=vv[0]||{r:24,g:184,b:176};
+ const c3=vv.find(o=>Math.hypot(o.r-c2.r,o.g-c2.g,o.b-c2.b)>110)||{r:255,g:122,b:47};
+ setK('c1',hex(dark.r*.55,dark.g*.55,dark.b*.55));setK('c2',hex(c2.r,c2.g,c2.b));setK('c3',hex(c3.r,c3.g,c3.b));setK('theme','custom');update()};
+$('rnd').onclick=()=>{const pick=a=>a[Math.random()*a.length|0],t=pick(Object.values(TH));
+ ['c1','c2','c3'].forEach((k,i)=>setK(k,t[i]));setK('theme','custom');
+ setK('font',pick(FONTS)[0]);setK('font2',pick(['Cairo','Tajawal','Almarai','Montserrat','Poppins']));
+ setK('waves',Math.random()>.4);setK('anim',pick(['fade','slide']));setK('kb',pick(['in','out']));
+ readAll();loadFonts().then(update)};
+// init
+try{const s=localStorage.getItem('sisiV2');if(s)applySaved(JSON.parse(s));const l=localStorage.getItem('sisiLogo');if(l)loadImg(l,i=>{logo=i;update()})}catch(e){}
+update();
+if(document.fonts)loadFonts().then(update);
+</script>
+</body>
+</html>
